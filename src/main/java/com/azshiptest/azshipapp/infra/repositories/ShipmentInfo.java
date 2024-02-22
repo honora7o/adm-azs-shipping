@@ -1,5 +1,8 @@
 package com.azshiptest.azshipapp.domain;
 
+import com.azshiptest.azshipapp.dto.Address;
+import com.azshiptest.azshipapp.dto.ShipmentStatusEnum;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
