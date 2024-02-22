@@ -19,10 +19,10 @@ public class RegisterShipmentTrackingCommand {
         this.shipmentInfoRepository = shipmentInfoRepository;
     }
 
-    public String execute(ShipmentInfoFormInput shipmentInfoFormInput) {
+    public ShipmentInfo execute(ShipmentInfoFormInput shipmentInfoFormInput) {
         ShipmentInfo shipmentInfo = buildShipmentInfo(shipmentInfoFormInput);
         this.shipmentInfoRepository.save(shipmentInfo);
-        return shipmentInfo.getTrackingID();
+        return shipmentInfo;
     }
 
     public ShipmentInfo buildShipmentInfo(ShipmentInfoFormInput shipmentInfoFormInput) {
@@ -31,7 +31,7 @@ public class RegisterShipmentTrackingCommand {
 
         String trackingID = buildTrackingID(senderAddress, recipientAddress);
 
-        LocalDate postingDate = shipmentInfoFormInput.postingDate();
+        LocalDate postingDate = LocalDate.now();
         LocalDate estimatedArrivalDate = postingDate.plusDays(calculateDaysToAdd(shipmentInfoFormInput.weight()));
 
         Optional<Integer> weight = shipmentInfoFormInput.weight();

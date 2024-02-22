@@ -3,16 +3,15 @@ package com.azshiptest.azshipapp.infra.repositories;
 import com.azshiptest.azshipapp.dto.StateCodeEnum;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
 @Table(name = "addresses_db")
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Address {
 
     @Id
