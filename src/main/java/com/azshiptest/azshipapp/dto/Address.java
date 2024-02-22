@@ -1,4 +1,4 @@
-package com.azshiptest.azshipapp.domain;
+package com.azshiptest.azshipapp.dto;
 
 public record Address(
         String streetName,
