@@ -7,7 +7,6 @@ import com.azshiptest.azshipapp.infra.repositories.ShipmentInfo;
 import com.azshiptest.azshipapp.infra.repositories.ShipmentInfoRepository;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.Random;
