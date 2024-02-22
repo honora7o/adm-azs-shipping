@@ -1,88 +1,38 @@
 package com.azshiptest.azshipapp.infra.repositories;
 
-import com.azshiptest.azshipapp.dto.Address;
 import com.azshiptest.azshipapp.dto.ShipmentStatusEnum;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Optional;
 
 @Entity
-public record ShipmentInfo(
-        @Id
-        String trackingID,
-        Address senderAddress,
-        Address recipientAddress,
-        ShipmentStatusEnum shipmentStatus,
-        LocalDate postingDate,
-        LocalDate estimatedArrivalDate,
-        BigDecimal value,
-        Optional<Integer> weight,
-        Optional<Float> cubingMeasurement
-) {
-    public static class ShipmentInfoBuilder {
-        private String trackingID;
-        private Address senderAddress;
-        private Address recipientAddress;
-        private ShipmentStatusEnum shipmentStatus;
-        private LocalDate postingDate;
-        private LocalDate estimatedArrivalDate;
-        private BigDecimal value;
-        private Optional<Integer> weight = Optional.empty();
-        private Optional<Float> cubingMeasurement = Optional.empty();
+@Table(name = "shipments_db")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class ShipmentInfo {
 
-        public ShipmentInfoBuilder withTrackingID(String trackingID) {
-            this.trackingID = trackingID;
-            return this;
-        }
+    @Id
+    private String trackingID;
 
-        public ShipmentInfoBuilder withSenderAddress(Address senderAddress) {
-            this.senderAddress = senderAddress;
-            return this;
-        }
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "sender_address_id")
+    private Address senderAddress;
 
-        public ShipmentInfoBuilder withRecipientAddress(Address recipientAddress) {
-            this.recipientAddress = recipientAddress;
-            return this;
-        }
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "recipient_address_id")
+    private Address recipientAddress;
 
-        public ShipmentInfoBuilder withShipmentStatus(ShipmentStatusEnum shipmentStatus) {
-            this.shipmentStatus = shipmentStatus;
-            return this;
-        }
+    @Enumerated(EnumType.STRING)
+    private ShipmentStatusEnum shipmentStatus;
 
-        public ShipmentInfoBuilder withPostingDate(LocalDate postingDate) {
-            this.postingDate = postingDate;
-            return this;
-        }
-
-        public ShipmentInfoBuilder withEstimatedArrivalDate(LocalDate postingDate) {
-            this.estimatedArrivalDate = estimatedArrivalDate;
-            return this;
-        }
-
-        public ShipmentInfoBuilder withValue(BigDecimal value) {
-            this.value = value;
-            return this;
-        }
-
-        public ShipmentInfoBuilder withWeight(Integer weight) {
-            this.weight = Optional.of(weight);
-            return this;
-        }
-
-        public ShipmentInfoBuilder withCubingMeasurement(Float cubingMeasurement) {
-            this.cubingMeasurement = Optional.of(cubingMeasurement);
-            return this;
-        }
-
-        public ShipmentInfo build() {
-            return new ShipmentInfo(trackingID, senderAddress, recipientAddress, shipmentStatus, postingDate,
-                    estimatedArrivalDate, value, weight, cubingMeasurement);
-        }
-    }
+    private LocalDate postingDate;
+    private LocalDate estimatedArrivalDate;
+    private BigDecimal value;
+    private Integer weight;
+    private Float cubingMeasurement;
 }
-
-
