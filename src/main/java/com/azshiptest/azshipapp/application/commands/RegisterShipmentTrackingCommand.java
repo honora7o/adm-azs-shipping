@@ -1,6 +1,6 @@
 package com.azshiptest.azshipapp.application.commands;
 
-import com.azshiptest.azshipapp.dto.Address;
+import com.azshiptest.azshipapp.infra.repositories.Address;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
 import com.azshiptest.azshipapp.dto.ShipmentStatusEnum;
 import com.azshiptest.azshipapp.infra.repositories.ShipmentInfo;
@@ -19,9 +19,10 @@ public class RegisterShipmentTrackingCommand {
         this.shipmentInfoRepository = shipmentInfoRepository;
     }
 
-    public void execute(ShipmentInfoFormInput shipmentInfoFormInput) {
+    public String execute(ShipmentInfoFormInput shipmentInfoFormInput) {
         ShipmentInfo shipmentInfo = buildShipmentInfo(shipmentInfoFormInput);
         this.shipmentInfoRepository.save(shipmentInfo);
+        return shipmentInfo.getTrackingID();
     }
 
     public ShipmentInfo buildShipmentInfo(ShipmentInfoFormInput shipmentInfoFormInput) {
@@ -36,23 +37,22 @@ public class RegisterShipmentTrackingCommand {
         Optional<Integer> weight = shipmentInfoFormInput.weight();
         Optional<Float> cubingMeasurement = shipmentInfoFormInput.cubingMeasurement();
 
-        return new ShipmentInfo.ShipmentInfoBuilder()
-                .withTrackingID(trackingID)
-                .withSenderAddress(senderAddress)
-                .withRecipientAddress(recipientAddress)
-                .withShipmentStatus(generateRandomShipmentStatus())
-                .withPostingDate(postingDate)
-                .withEstimatedArrivalDate(estimatedArrivalDate)
-                .withValue(shipmentInfoFormInput.value())
-                .withWeight(weight.orElse(null))
-                .withCubingMeasurement(cubingMeasurement.orElse(null))
+        return ShipmentInfo.builder()
+                .trackingID(trackingID)
+                .senderAddress(senderAddress)
+                .recipientAddress(recipientAddress)
+                .shipmentStatus(generateRandomShipmentStatus())
+                .postingDate(postingDate)
+                .estimatedArrivalDate(estimatedArrivalDate)
+                .value(shipmentInfoFormInput.value())
+                .weight(weight.orElse(null))
+                .cubingMeasurement(cubingMeasurement.orElse(null))
                 .build();
-
     }
 
     private String buildTrackingID(Address senderAddress, Address recipientAddress) {
-        String senderStateCode = senderAddress.stateCodeEnum().toString();
-        String recipientStateCode = recipientAddress.stateCodeEnum().toString();
+        String senderStateCode = senderAddress.getStateCodeEnum().toString();
+        String recipientStateCode = recipientAddress.getStateCodeEnum().toString();
 
         StringBuilder trackingIDBuilder = new StringBuilder();
         trackingIDBuilder.append(senderStateCode);
