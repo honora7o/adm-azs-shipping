@@ -7,10 +7,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShippingInfoUniversalSearchQuery {
+public class ShipmentInfoUniversalSearchQuery {
     private final ShipmentInfoRepository shipmentInfoRepository;
 
-    public ShippingInfoUniversalSearchQuery(ShipmentInfoRepository shipmentInfoRepository) {
+    public ShipmentInfoUniversalSearchQuery(ShipmentInfoRepository shipmentInfoRepository) {
         this.shipmentInfoRepository = shipmentInfoRepository;
     }
 

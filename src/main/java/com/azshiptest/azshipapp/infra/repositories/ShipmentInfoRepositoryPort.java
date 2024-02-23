@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface ShipmentInfoRepositoryPort {
     ShipmentInfo save(ShipmentInfo shipmentInfo);
+    ShipmentInfo findByTrackingID(String trackingID);
     Page<ShipmentInfo> universalSearchShipments(@Param("keyword") String keyword,
                                                 Pageable pageable);
 }

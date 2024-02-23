@@ -1,7 +1,6 @@
 package com.azshiptest.azshipapp.infra.repositories;
 
 import com.azshiptest.azshipapp.models.ShipmentInfo;
-import com.azshiptest.azshipapp.models.StateCodeEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,14 +8,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDate;
-
 @Repository
 public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, String>, ShipmentInfoRepositoryPort {
 
     @Override
     ShipmentInfo save(ShipmentInfo shipmentInfo);
 
+    @Override
     @Query("SELECT s FROM ShipmentInfo s " +
             "LEFT JOIN s.senderAddress sender " +
             "LEFT JOIN s.recipientAddress recipient " +
@@ -34,5 +32,7 @@ public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, Stri
     Page<ShipmentInfo> universalSearchShipments(@Param("keyword") String keyword,
                                        Pageable pageable);
 
+    @Override
+    ShipmentInfo findByTrackingID(String trackingID);
 }
 
