@@ -1,5 +1,6 @@
 package com.azshiptest.azshipapp.application.queries;
 
+import com.azshiptest.azshipapp.dto.ShipmentInfoUniversalSearchQueryResponse;
 import com.azshiptest.azshipapp.infra.repositories.ShipmentInfoRepository;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
 import org.springframework.data.domain.Page;
@@ -14,7 +15,17 @@ public class ShipmentInfoUniversalSearchQuery {
         this.shipmentInfoRepository = shipmentInfoRepository;
     }
 
-    public Page<ShipmentInfo> execute(String keyword, Pageable pageable) {
-        return shipmentInfoRepository.universalSearchShipments(keyword, pageable);
+    public ShipmentInfoUniversalSearchQueryResponse execute(String keyword, Pageable pageable) {
+        Page<ShipmentInfo> shipmentInfo = shipmentInfoRepository.universalSearchShipments(keyword, pageable);
+        ShipmentInfoUniversalSearchQueryResponse response = new ShipmentInfoUniversalSearchQueryResponse(
+                shipmentInfo.getContent(),
+                shipmentInfo.getPageable().getPageNumber(),
+                shipmentInfo.getPageable().getPageSize(),
+                shipmentInfo.getTotalElements(),
+                shipmentInfo.getTotalPages(),
+                shipmentInfo.isLast()
+        );
+
+        return response;
     }
 }

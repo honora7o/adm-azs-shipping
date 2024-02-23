@@ -4,6 +4,7 @@ import com.azshiptest.azshipapp.application.commands.RegisterShipmentTrackingCom
 import com.azshiptest.azshipapp.application.queries.FindShipmentInfoByTrackingIDQuery;
 import com.azshiptest.azshipapp.application.queries.ShipmentInfoUniversalSearchQuery;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
+import com.azshiptest.azshipapp.dto.ShipmentInfoUniversalSearchQueryResponse;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -38,11 +39,11 @@ public class ShipmentController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Page<ShipmentInfo>> searchShipments(@RequestParam String keyword,
-                                                              @RequestParam(defaultValue = "0") int pageNo,
-                                                              @RequestParam(defaultValue = "3") int pageSize) {
+    public ResponseEntity<ShipmentInfoUniversalSearchQueryResponse> searchShipments(@RequestParam String keyword,
+                                                                                    @RequestParam(defaultValue = "0") int pageNo,
+                                                                                    @RequestParam(defaultValue = "3") int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        Page<ShipmentInfo> shipments = shipmentInfoUniversalSearchQuery.execute(keyword, pageable);
+        ShipmentInfoUniversalSearchQueryResponse shipments = shipmentInfoUniversalSearchQuery.execute(keyword, pageable);
         return ResponseEntity.ok(shipments);
     }
 }
