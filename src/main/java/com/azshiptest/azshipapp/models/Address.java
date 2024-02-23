@@ -1,7 +1,5 @@
-package com.azshiptest.azshipapp.infra.repositories;
+package com.azshiptest.azshipapp.models;
 
-import com.azshiptest.azshipapp.dto.StateCodeEnum;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 

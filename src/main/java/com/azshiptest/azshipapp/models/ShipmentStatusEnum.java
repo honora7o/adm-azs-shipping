@@ -1,4 +1,4 @@
-package com.azshiptest.azshipapp.dto;
+package com.azshiptest.azshipapp.models;
 
 public enum ShipmentStatusEnum {
     POSTED,

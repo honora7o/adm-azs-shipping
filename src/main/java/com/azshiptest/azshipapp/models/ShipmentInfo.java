@@ -1,6 +1,5 @@
-package com.azshiptest.azshipapp.infra.repositories;
+package com.azshiptest.azshipapp.models;
 
-import com.azshiptest.azshipapp.dto.ShipmentStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 

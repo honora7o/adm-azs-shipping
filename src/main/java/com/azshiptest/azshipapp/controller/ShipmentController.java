@@ -2,7 +2,7 @@ package com.azshiptest.azshipapp.controller;
 
 import com.azshiptest.azshipapp.application.commands.RegisterShipmentTrackingCommand;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
-import com.azshiptest.azshipapp.infra.repositories.ShipmentInfo;
+import com.azshiptest.azshipapp.models.ShipmentInfo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

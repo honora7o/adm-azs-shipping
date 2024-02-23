@@ -1,9 +1,9 @@
 package com.azshiptest.azshipapp.application.commands;
 
-import com.azshiptest.azshipapp.infra.repositories.Address;
+import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
-import com.azshiptest.azshipapp.dto.ShipmentStatusEnum;
-import com.azshiptest.azshipapp.infra.repositories.ShipmentInfo;
+import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
+import com.azshiptest.azshipapp.models.ShipmentInfo;
 import com.azshiptest.azshipapp.infra.repositories.ShipmentInfoRepository;
 import org.springframework.stereotype.Component;
 
