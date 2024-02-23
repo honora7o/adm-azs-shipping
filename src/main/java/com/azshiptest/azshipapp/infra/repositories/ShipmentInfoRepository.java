@@ -1,9 +1,11 @@
 package com.azshiptest.azshipapp.infra.repositories;
 
 import com.azshiptest.azshipapp.models.ShipmentInfo;
+import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -34,5 +36,9 @@ public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, Stri
 
     @Override
     ShipmentInfo findByTrackingID(String trackingID);
+    @Override
+    @Modifying
+    @Query("UPDATE ShipmentInfo s SET s.shipmentStatus = :shipmentStatus WHERE s.trackingID = :trackingID")
+    int updateShipmentStatusByTrackingID(@Param("trackingID") String trackingID, @Param("shipmentStatus") ShipmentStatusEnum shipmentStatus);
 }
 
