@@ -41,7 +41,7 @@ public class RegisterShipmentTrackingCommand {
                 .trackingID(trackingID)
                 .senderAddress(senderAddress)
                 .recipientAddress(recipientAddress)
-                .shipmentStatus(generateRandomShipmentStatus())
+                .shipmentStatus(ShipmentStatusEnum.POSTED)
                 .postingDate(postingDate)
                 .estimatedArrivalDate(estimatedArrivalDate)
                 .value(shipmentInfoFormInput.value())
@@ -64,14 +64,6 @@ public class RegisterShipmentTrackingCommand {
 
         trackingIDBuilder.append(recipientStateCode);
         return trackingIDBuilder.toString();
-    }
-
-    // this implementation is for testing purposes only, as correct status on first build would always be "POSTED"
-    // and actually updating it correctly would probably be handled by a different microservice
-    private ShipmentStatusEnum generateRandomShipmentStatus() {
-        Random random = new Random();
-        int index = random.nextInt(ShipmentStatusEnum.values().length);
-        return ShipmentStatusEnum.values()[index];
     }
 
     // mock implementation where days to ship is calculated on cargo weight

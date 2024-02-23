@@ -70,8 +70,8 @@ public class RegisterShipmentTrackingCommandTest {
             assertEquals(recipientAddress, argument.getRecipientAddress());
             assertTrue(argument.getTrackingID().matches("[A-Z]{2}\\d{9}[A-Z]{2}")); // not good, only checks if there are 9 rng numbers between 2 capitalized pair of letters
             assertEquals(LocalDate.now(), argument.getPostingDate());
-            assertTrue(Arrays.asList(ShipmentStatusEnum.values()).contains(argument.getShipmentStatus())); // tests the mock implementation, on actual impl
-            return true;                                                                                   // it would only need to check if the value is "POSTED"
+            assertEquals(ShipmentStatusEnum.POSTED, argument.getShipmentStatus());
+            return true;
         }));
     }
 }
