@@ -15,4 +15,5 @@ public interface ShipmentInfoRepositoryPort {
                                                 Pageable pageable);
     int updateShipmentStatusByTrackingID(@Param("trackingID") String trackingID, @Param("shipmentStatus") ShipmentStatusEnum shipmentStatus);
     int deleteByTrackingID(String trackingID);
+    Page<ShipmentInfo> findAllByTaxPayerRegistrationNo(String taxPayerRegistrationNo, Pageable pageable);
 }

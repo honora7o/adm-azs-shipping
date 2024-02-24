@@ -8,7 +8,7 @@ import java.util.List;
 
 @AllArgsConstructor
 @Data
-public class ShipmentInfoUniversalSearchQueryResponse {
+public class ShipmentInfoPageableResponse {
     private List<ShipmentInfo> content;
     private int pageNo;
     private int pageSize;

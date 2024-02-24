@@ -4,10 +4,11 @@ import com.azshiptest.azshipapp.application.commands.DeleteShipmentByTrackingIDC
 import com.azshiptest.azshipapp.application.commands.RegisterShipmentTrackingCommand;
 import com.azshiptest.azshipapp.application.commands.UpdateShipmentRecipientAddressByTrackingIDCommand;
 import com.azshiptest.azshipapp.application.commands.UpdateShipmentStatusByTrackingIDCommand;
+import com.azshiptest.azshipapp.application.queries.FindAllShipmentsByTaxPayerRegistrationNoQuery;
 import com.azshiptest.azshipapp.application.queries.FindShipmentByTrackingIDQuery;
 import com.azshiptest.azshipapp.application.queries.ShipmentInfoUniversalSearchQuery;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
-import com.azshiptest.azshipapp.dto.ShipmentInfoUniversalSearchQueryResponse;
+import com.azshiptest.azshipapp.dto.ShipmentInfoPageableResponse;
 import com.azshiptest.azshipapp.dto.ShipmentStatusUpdateRequest;
 import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
@@ -31,19 +32,22 @@ public class ShipmentController {
     private final UpdateShipmentStatusByTrackingIDCommand updateShipmentStatusByTrackingIDCommand;
     private final UpdateShipmentRecipientAddressByTrackingIDCommand updateShipmentRecipientAddressByTrackingIDCommand;
     private final DeleteShipmentByTrackingIDCommand deleteShipmentInfoByTrackingIDCommand;
+    private final FindAllShipmentsByTaxPayerRegistrationNoQuery findAllShipmentsByTaxPayerRegistrationNoQuery;
 
     public ShipmentController(RegisterShipmentTrackingCommand registerShipmentTrackingCommand,
                               ShipmentInfoUniversalSearchQuery shipmentInfoUniversalSearchQuery,
                               FindShipmentByTrackingIDQuery findShipmentByTrackingIDQuery,
                               UpdateShipmentStatusByTrackingIDCommand updateShipmentStatusByTrackingIDCommand,
                               UpdateShipmentRecipientAddressByTrackingIDCommand updateShipmentRecipientAddressByTrackingIDCommand,
-                              DeleteShipmentByTrackingIDCommand deleteShipmentInfoByTrackingIDCommand) {
+                              DeleteShipmentByTrackingIDCommand deleteShipmentInfoByTrackingIDCommand,
+                              FindAllShipmentsByTaxPayerRegistrationNoQuery findAllShipmentsByTaxPayerRegistrationNoQuery) {
         this.registerShipmentTrackingCommand = registerShipmentTrackingCommand;
         this.shipmentInfoUniversalSearchQuery = shipmentInfoUniversalSearchQuery;
         this.findShipmentByTrackingIDQuery = findShipmentByTrackingIDQuery;
         this.updateShipmentStatusByTrackingIDCommand = updateShipmentStatusByTrackingIDCommand;
         this.updateShipmentRecipientAddressByTrackingIDCommand = updateShipmentRecipientAddressByTrackingIDCommand;
         this.deleteShipmentInfoByTrackingIDCommand = deleteShipmentInfoByTrackingIDCommand;
+        this.findAllShipmentsByTaxPayerRegistrationNoQuery = findAllShipmentsByTaxPayerRegistrationNoQuery;
     }
     @PostMapping
     public ResponseEntity<ShipmentInfo> save(@RequestBody @Valid ShipmentInfoFormInput shipmentInfoFormInput) {
@@ -51,18 +55,27 @@ public class ShipmentController {
         return ResponseEntity.ok(shipmentInfo);
     }
 
-    @GetMapping("/{trackingID}")
+    @GetMapping("/tracking-id/{trackingID}")
     public ResponseEntity<ShipmentInfo> findShipmentInfoByTrackingID(@PathVariable String trackingID) {
         Optional<ShipmentInfo> shipmentInfo = findShipmentByTrackingIDQuery.execute(trackingID);
         return ResponseEntity.ok(shipmentInfo.get());
     }
 
-    @GetMapping("/search")
-    public ResponseEntity<ShipmentInfoUniversalSearchQueryResponse> searchShipments(@RequestParam String keyword,
-                                                                                    @RequestParam(defaultValue = "0") int pageNo,
-                                                                                    @RequestParam(defaultValue = "3") int pageSize) {
+    @GetMapping("/tax-payer-registration-number/{taxPayerRegistrationNo}")
+    public ResponseEntity<ShipmentInfoPageableResponse> findAllShipmentByTaxPayerRegistrationNo(@PathVariable String taxPayerRegistrationNo,
+                                                                                                @RequestParam(defaultValue = "0") int pageNo,
+                                                                                                @RequestParam(defaultValue = "3") int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
-        ShipmentInfoUniversalSearchQueryResponse shipments = shipmentInfoUniversalSearchQuery.execute(keyword, pageable);
+        ShipmentInfoPageableResponse shipments = findAllShipmentsByTaxPayerRegistrationNoQuery.execute(taxPayerRegistrationNo, pageable);
+        return ResponseEntity.ok(shipments);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<ShipmentInfoPageableResponse> searchShipments(@RequestParam String keyword,
+                                                                        @RequestParam(defaultValue = "0") int pageNo,
+                                                                        @RequestParam(defaultValue = "3") int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        ShipmentInfoPageableResponse shipments = shipmentInfoUniversalSearchQuery.execute(keyword, pageable);
         return ResponseEntity.ok(shipments);
     }
 

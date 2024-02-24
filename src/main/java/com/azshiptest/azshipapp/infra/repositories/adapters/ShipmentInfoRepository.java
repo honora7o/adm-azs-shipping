@@ -23,6 +23,9 @@ public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, Stri
     int deleteByTrackingID(String trackingID);
 
     @Override
+    Page<ShipmentInfo> findAllByTaxPayerRegistrationNo(String taxPayerRegistrationNo, Pageable pageable);
+
+    @Override
     @Query("SELECT s FROM ShipmentInfo s " +
             "LEFT JOIN s.senderAddress sender " +
             "LEFT JOIN s.recipientAddress recipient " +

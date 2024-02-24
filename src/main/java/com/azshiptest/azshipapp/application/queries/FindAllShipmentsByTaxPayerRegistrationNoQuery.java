@@ -8,15 +8,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ShipmentInfoUniversalSearchQuery {
-    private final ShipmentInfoRepository shipmentInfoRepository;
+public class FindAllShipmentsByTaxPayerRegistrationNoQuery {
+    ShipmentInfoRepository shipmentInfoRepository;
 
-    public ShipmentInfoUniversalSearchQuery(ShipmentInfoRepository shipmentInfoRepository) {
+    public FindAllShipmentsByTaxPayerRegistrationNoQuery(ShipmentInfoRepository shipmentInfoRepository) {
         this.shipmentInfoRepository = shipmentInfoRepository;
     }
 
-    public ShipmentInfoPageableResponse execute(String keyword, Pageable pageable) {
-        Page<ShipmentInfo> shipmentInfo = shipmentInfoRepository.universalSearchShipments(keyword, pageable);
+    public ShipmentInfoPageableResponse execute(String taxPayerRegistrationNo, Pageable pageable) {
+        Page<ShipmentInfo> shipmentInfo = shipmentInfoRepository.findAllByTaxPayerRegistrationNo(taxPayerRegistrationNo, pageable);
         ShipmentInfoPageableResponse response = new ShipmentInfoPageableResponse(
                 shipmentInfo.getContent(),
                 shipmentInfo.getPageable().getPageNumber(),
