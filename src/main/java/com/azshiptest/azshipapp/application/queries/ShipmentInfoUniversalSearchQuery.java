@@ -1,7 +1,7 @@
 package com.azshiptest.azshipapp.application.queries;
 
 import com.azshiptest.azshipapp.dto.ShipmentInfoUniversalSearchQueryResponse;
-import com.azshiptest.azshipapp.infra.repositories.ShipmentInfoRepository;
+import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

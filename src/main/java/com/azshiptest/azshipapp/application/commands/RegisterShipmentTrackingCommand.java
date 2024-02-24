@@ -4,7 +4,7 @@ import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
-import com.azshiptest.azshipapp.infra.repositories.ShipmentInfoRepository;
+import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;

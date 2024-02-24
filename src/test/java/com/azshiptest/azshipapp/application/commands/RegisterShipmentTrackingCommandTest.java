@@ -3,7 +3,7 @@ package com.azshiptest.azshipapp.application.commands;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import com.azshiptest.azshipapp.models.StateCodeEnum;
 import com.azshiptest.azshipapp.models.Address;
-import com.azshiptest.azshipapp.infra.repositories.ShipmentInfoRepository;
+import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +13,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

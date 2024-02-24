@@ -1,5 +1,7 @@
-package com.azshiptest.azshipapp.infra.repositories;
+package com.azshiptest.azshipapp.infra.repositories.adapters;
 
+import com.azshiptest.azshipapp.infra.repositories.ports.ShipmentInfoRepositoryPort;
+import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import org.springframework.data.domain.Page;
@@ -9,6 +11,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, String>, ShipmentInfoRepositoryPort {
@@ -35,10 +39,15 @@ public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, Stri
                                        Pageable pageable);
 
     @Override
-    ShipmentInfo findByTrackingID(String trackingID);
+    Optional<ShipmentInfo> findByTrackingID(String trackingID);
     @Override
     @Modifying
     @Query("UPDATE ShipmentInfo s SET s.shipmentStatus = :shipmentStatus WHERE s.trackingID = :trackingID")
     int updateShipmentStatusByTrackingID(@Param("trackingID") String trackingID, @Param("shipmentStatus") ShipmentStatusEnum shipmentStatus);
+
+    @Override
+    @Modifying
+    @Query("UPDATE ShipmentInfo s SET s.recipientAddress = :newRecipientAddress WHERE s.trackingID = :trackingID")
+    int updateShipmentRecipientAddressByTrackingID(@Param("trackingID") String trackingID, @Param("newRecipientAddress") Address newRecipientAddress);
 }
 
