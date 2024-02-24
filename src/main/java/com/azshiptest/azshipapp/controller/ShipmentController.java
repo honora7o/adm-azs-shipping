@@ -13,6 +13,7 @@ import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -45,7 +46,7 @@ public class ShipmentController {
         this.deleteShipmentInfoByTrackingIDCommand = deleteShipmentInfoByTrackingIDCommand;
     }
     @PostMapping
-    public ResponseEntity<ShipmentInfo> save(@RequestBody ShipmentInfoFormInput shipmentInfoFormInput) {
+    public ResponseEntity<ShipmentInfo> save(@RequestBody @Valid ShipmentInfoFormInput shipmentInfoFormInput) {
         ShipmentInfo shipmentInfo = registerShipmentTrackingCommand.execute(shipmentInfoFormInput);
         return ResponseEntity.ok(shipmentInfo);
     }

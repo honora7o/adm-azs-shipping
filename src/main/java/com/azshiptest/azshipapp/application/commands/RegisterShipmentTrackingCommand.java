@@ -38,6 +38,7 @@ public class RegisterShipmentTrackingCommand {
         Optional<Float> cubingMeasurement = shipmentInfoFormInput.cubingMeasurement();
 
         return ShipmentInfo.builder()
+                .taxPayerRegistrationNo(shipmentInfoFormInput.taxPayerRegistrationNo())
                 .trackingID(trackingID)
                 .senderAddress(senderAddress)
                 .recipientAddress(recipientAddress)

@@ -18,6 +18,8 @@ public class ShipmentInfo {
     @Id
     private String trackingID;
 
+    private String taxPayerRegistrationNo;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sender_address_id")
     private Address senderAddress;

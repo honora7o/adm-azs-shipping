@@ -35,6 +35,6 @@ public class Address {
     private int addressNumber;
 
     @NotNull
-    @Pattern(regexp = "\\d{8}", message = "Invalid zipcode.")
+    @Pattern(regexp = "\\d{8}", message = "Enter a valid zipcode.")
     private String zipCode;
 }
