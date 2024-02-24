@@ -1,6 +1,8 @@
 package com.azshiptest.azshipapp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.*;
 
 @Entity
@@ -16,13 +18,23 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @NotNull
     private String streetName;
+
+    @NotNull
     private String neighbourhood;
+
+    @NotNull
     private String city;
 
     @Enumerated(EnumType.STRING)
+    @NotNull
     private StateCodeEnum stateCodeEnum;
 
+    @NotNull
     private int addressNumber;
+
+    @NotNull
+    @Pattern(regexp = "\\d{8}", message = "Invalid zipcode.")
     private String zipCode;
 }
