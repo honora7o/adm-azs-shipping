@@ -54,6 +54,7 @@ public class RegisterShipmentTrackingCommandTest {
                 .build();
 
         ShipmentInfoFormInput shipmentInfoFormInput = new ShipmentInfoFormInput(
+                "12345678922",
                 senderAddress,
                 recipientAddress,
                 BigDecimal.valueOf(100.00),
