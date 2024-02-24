@@ -1,7 +1,6 @@
 package com.azshiptest.azshipapp.infra.repositories.adapters;
 
 import com.azshiptest.azshipapp.infra.repositories.ports.ShipmentInfoRepositoryPort;
-import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import org.springframework.data.domain.Page;

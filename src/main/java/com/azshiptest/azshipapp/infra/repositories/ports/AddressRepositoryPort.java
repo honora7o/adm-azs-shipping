@@ -1,6 +1,5 @@
 package com.azshiptest.azshipapp.infra.repositories.ports;
 
-import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.models.StateCodeEnum;
 import org.springframework.data.repository.query.Param;
 

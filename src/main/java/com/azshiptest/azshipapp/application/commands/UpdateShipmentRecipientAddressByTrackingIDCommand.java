@@ -5,7 +5,6 @@ import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoReposito
 import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
 import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

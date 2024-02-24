@@ -3,7 +3,6 @@ package com.azshiptest.azshipapp.application.commands;
 import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import jakarta.transaction.Transactional;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Component;
 
 @Component

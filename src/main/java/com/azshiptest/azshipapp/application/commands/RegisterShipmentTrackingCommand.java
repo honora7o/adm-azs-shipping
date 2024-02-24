@@ -71,11 +71,11 @@ public class RegisterShipmentTrackingCommand {
         if (weight.isPresent()) {
             int actualWeight = weight.get();
             if (actualWeight >= 100) {
-                return 5; // if weight is 100 or more, add 5 days
+                return 5;
             } else if (actualWeight >= 50) {
-                return 3; // if weight is between 50 and 99, add 3 days
+                return 3;
             } else {
-                return 1; // if weight is less than 50, add 1 day
+                return 1;
             }
         } else {
             return 10;
