@@ -15,7 +15,6 @@ public interface AddressRepository extends JpaRepository<Address, Long>, Address
 
     @Override
     @Modifying
-    @Transactional
     @Query("UPDATE Address a SET a.streetName = :streetName, a.neighbourhood = :neighbourhood, " +
             "a.city = :city, a.stateCodeEnum = :stateCodeEnum, " +
             "a.addressNumber = :addressNumber, a.zipCode = :zipCode WHERE a.id = :addressId")

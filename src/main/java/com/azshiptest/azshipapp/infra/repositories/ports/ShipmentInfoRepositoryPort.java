@@ -15,5 +15,5 @@ public interface ShipmentInfoRepositoryPort {
     Page<ShipmentInfo> universalSearchShipments(@Param("keyword") String keyword,
                                                 Pageable pageable);
     int updateShipmentStatusByTrackingID(@Param("trackingID") String trackingID, @Param("shipmentStatus") ShipmentStatusEnum shipmentStatus);
-    int updateShipmentRecipientAddressByTrackingID(@Param("trackingID") String trackingID, @Param("shipmentStatus") Address newRecipientAddress);
+    int deleteByTrackingID(String trackingID);
 }

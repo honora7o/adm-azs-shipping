@@ -21,6 +21,9 @@ public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, Stri
     ShipmentInfo save(ShipmentInfo shipmentInfo);
 
     @Override
+    int deleteByTrackingID(String trackingID);
+
+    @Override
     @Query("SELECT s FROM ShipmentInfo s " +
             "LEFT JOIN s.senderAddress sender " +
             "LEFT JOIN s.recipientAddress recipient " +
@@ -44,10 +47,5 @@ public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, Stri
     @Modifying
     @Query("UPDATE ShipmentInfo s SET s.shipmentStatus = :shipmentStatus WHERE s.trackingID = :trackingID")
     int updateShipmentStatusByTrackingID(@Param("trackingID") String trackingID, @Param("shipmentStatus") ShipmentStatusEnum shipmentStatus);
-
-    @Override
-    @Modifying
-    @Query("UPDATE ShipmentInfo s SET s.recipientAddress = :newRecipientAddress WHERE s.trackingID = :trackingID")
-    int updateShipmentRecipientAddressByTrackingID(@Param("trackingID") String trackingID, @Param("newRecipientAddress") Address newRecipientAddress);
 }
 

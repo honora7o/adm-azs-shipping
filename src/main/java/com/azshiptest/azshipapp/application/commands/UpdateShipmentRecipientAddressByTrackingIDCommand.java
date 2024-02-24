@@ -4,6 +4,8 @@ import com.azshiptest.azshipapp.infra.repositories.adapters.AddressRepository;
 import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
 import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
+import jakarta.transaction.Transactional;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -18,6 +20,7 @@ public class UpdateShipmentRecipientAddressByTrackingIDCommand {
         this.addressRepository = addressRepository;
     }
 
+    @Transactional
     public int execute(String trackingID, Address newRecipientAddress) {
         Optional<ShipmentInfo> optionalShipmentInfo = shipmentInfoRepository.findByTrackingID(trackingID);
 

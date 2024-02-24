@@ -1,5 +1,6 @@
 package com.azshiptest.azshipapp.controller;
 
+import com.azshiptest.azshipapp.application.commands.DeleteShipmentByTrackingIDCommand;
 import com.azshiptest.azshipapp.application.commands.RegisterShipmentTrackingCommand;
 import com.azshiptest.azshipapp.application.commands.UpdateShipmentRecipientAddressByTrackingIDCommand;
 import com.azshiptest.azshipapp.application.commands.UpdateShipmentStatusByTrackingIDCommand;
@@ -28,17 +29,20 @@ public class ShipmentController {
     private final FindShipmentByTrackingIDQuery findShipmentByTrackingIDQuery;
     private final UpdateShipmentStatusByTrackingIDCommand updateShipmentStatusByTrackingIDCommand;
     private final UpdateShipmentRecipientAddressByTrackingIDCommand updateShipmentRecipientAddressByTrackingIDCommand;
+    private final DeleteShipmentByTrackingIDCommand deleteShipmentInfoByTrackingIDCommand;
 
     public ShipmentController(RegisterShipmentTrackingCommand registerShipmentTrackingCommand,
                               ShipmentInfoUniversalSearchQuery shipmentInfoUniversalSearchQuery,
                               FindShipmentByTrackingIDQuery findShipmentByTrackingIDQuery,
                               UpdateShipmentStatusByTrackingIDCommand updateShipmentStatusByTrackingIDCommand,
-                              UpdateShipmentRecipientAddressByTrackingIDCommand updateShipmentRecipientAddressByTrackingIDCommand) {
+                              UpdateShipmentRecipientAddressByTrackingIDCommand updateShipmentRecipientAddressByTrackingIDCommand,
+                              DeleteShipmentByTrackingIDCommand deleteShipmentInfoByTrackingIDCommand) {
         this.registerShipmentTrackingCommand = registerShipmentTrackingCommand;
         this.shipmentInfoUniversalSearchQuery = shipmentInfoUniversalSearchQuery;
         this.findShipmentByTrackingIDQuery = findShipmentByTrackingIDQuery;
         this.updateShipmentStatusByTrackingIDCommand = updateShipmentStatusByTrackingIDCommand;
         this.updateShipmentRecipientAddressByTrackingIDCommand = updateShipmentRecipientAddressByTrackingIDCommand;
+        this.deleteShipmentInfoByTrackingIDCommand = deleteShipmentInfoByTrackingIDCommand;
     }
     @PostMapping
     public ResponseEntity<ShipmentInfo> save(@RequestBody ShipmentInfoFormInput shipmentInfoFormInput) {
@@ -77,6 +81,13 @@ public class ShipmentController {
                                                                   @RequestBody Address newRecipientAddress) {
         return (updateShipmentRecipientAddressByTrackingIDCommand.execute(trackingID, newRecipientAddress) > 0) ?
                 ResponseEntity.ok("Recipient address for the shipment of tracking ID " + trackingID + " has been successfully updated!") :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
+    }
+
+    @DeleteMapping("/{trackingID}/delete")
+    public ResponseEntity<?> deleteShipmentInfoByTrackingID(@PathVariable String trackingID) {
+        return (deleteShipmentInfoByTrackingIDCommand.execute(trackingID) > 0) ?
+                ResponseEntity.ok("Shipment info for the shipment of tracking ID " + trackingID + " has been successfully deleted.") :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
     }
 }
