@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: ${DB_USERNAME:-azship_mgr}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-azship1111}
+      POSTGRES_DB: ${DB_NAME:-azship_db}
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-azship_db}
+      DB_USERNAME: ${DB_USERNAME:-azship_mgr}
+      DB_PASSWORD: ${DB_PASSWORD:-azship1111}
+    depends_on:
+      - postgres
