@@ -1,5 +1,6 @@
 package com.azshiptest.azshipapp.application.commands;
 
+import com.azshiptest.azshipapp.dto.ChangeAddressRequest;
 import com.azshiptest.azshipapp.infra.repositories.adapters.AddressRepository;
 import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
 import com.azshiptest.azshipapp.infra.entities.AddressEntity;
@@ -20,7 +21,7 @@ public class UpdateShipmentRecipientAddressByTrackingIDCommand {
     }
 
     @Transactional
-    public int execute(String trackingID, AddressEntity newRecipientAddressEntity) {
+    public int execute(String trackingID, ChangeAddressRequest newAddress) {
         Optional<ShipmentEntity> optionalShipmentInfo = shipmentInfoRepository.findByTrackingID(trackingID);
 
         if (optionalShipmentInfo.isEmpty()) {
@@ -30,10 +31,10 @@ public class UpdateShipmentRecipientAddressByTrackingIDCommand {
         ShipmentEntity shipmentEntity = optionalShipmentInfo.get();
         Long addressId = shipmentEntity.getRecipientAddressEntity().getId();
 
-        addressRepository.updateAddressById(addressId, newRecipientAddressEntity.getStreetName(),
-                newRecipientAddressEntity.getNeighbourhood(), newRecipientAddressEntity.getCity(),
-                newRecipientAddressEntity.getStateCodeEnum(), newRecipientAddressEntity.getAddressNumber(),
-                newRecipientAddressEntity.getZipCode());
+        addressRepository.updateAddressById(addressId, newAddress.streetName(),
+                newAddress.neighbourhood(), newAddress.city(),
+                newAddress.stateCodeEnum(), newAddress.addressNumber(),
+                newAddress.zipCode());
 
         return 1;
     }

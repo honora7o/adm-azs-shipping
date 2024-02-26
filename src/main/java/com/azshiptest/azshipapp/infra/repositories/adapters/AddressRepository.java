@@ -19,7 +19,7 @@ public interface AddressRepository extends JpaRepository<AddressEntity, Long>, A
             "a.addressNumber = :addressNumber, a.zipCode = :zipCode WHERE a.id = :addressId")
     int updateAddressById(@Param("addressId") Long addressId, @Param("streetName") String streetName,
                           @Param("neighbourhood") String neighbourhood, @Param("city") String city,
-                          @Param("stateCodeEnum") StateCodeEnum stateCodeEnum, @Param("addressNumber") int addressNumber,
+                          @Param("stateCodeEnum") StateCodeEnum stateCodeEnum, @Param("addressNumber") String addressNumber,
                           @Param("zipCode") String zipCode);
 
 }

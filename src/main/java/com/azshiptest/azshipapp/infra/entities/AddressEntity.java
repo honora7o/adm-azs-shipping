@@ -19,24 +19,13 @@ public class AddressEntity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
     private String streetName;
-
-    @NotNull
     private String neighbourhood;
-
-    @NotNull
     private String city;
 
     @Enumerated(EnumType.STRING)
-    @NotNull
-
     private StateCodeEnum stateCodeEnum;
 
-    @NotNull
-    private int addressNumber;
-
-    @NotNull
-    @Pattern(regexp = "\\d{8}", message = "Enter a valid zipcode.")
+    private String addressNumber;
     private String zipCode;
 }

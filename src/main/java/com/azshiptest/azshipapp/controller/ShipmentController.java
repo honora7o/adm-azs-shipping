@@ -7,6 +7,7 @@ import com.azshiptest.azshipapp.application.commands.UpdateShipmentStatusByTrack
 import com.azshiptest.azshipapp.application.queries.FindAllShipmentsByTaxPayerRegistrationNoQuery;
 import com.azshiptest.azshipapp.application.queries.FindShipmentByTrackingIDQuery;
 import com.azshiptest.azshipapp.application.queries.ShipmentInfoUniversalSearchQuery;
+import com.azshiptest.azshipapp.dto.ChangeAddressRequest;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
 import com.azshiptest.azshipapp.dto.ShipmentInfoPageableResponse;
 import com.azshiptest.azshipapp.dto.ShipmentStatusUpdateRequest;
@@ -97,8 +98,8 @@ public class ShipmentController {
     @PatchMapping("/{trackingID}/recipientAddress")
     @Transactional
     public ResponseEntity<?> updateShipmentInfoRecipientAddress(@PathVariable String trackingID,
-                                                                  @RequestBody AddressEntity newRecipientAddressEntity) {
-        return (updateShipmentRecipientAddressByTrackingIDCommand.execute(trackingID, newRecipientAddressEntity) > 0) ?
+                                                                  @RequestBody ChangeAddressRequest changeAddressRequest) {
+        return (updateShipmentRecipientAddressByTrackingIDCommand.execute(trackingID, changeAddressRequest) > 0) ?
                 ResponseEntity.ok("Recipient address for the shipment of tracking ID " + trackingID + " has been successfully updated!") :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
     }
