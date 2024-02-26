@@ -10,8 +10,8 @@ import com.azshiptest.azshipapp.application.queries.ShipmentInfoUniversalSearchQ
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
 import com.azshiptest.azshipapp.dto.ShipmentInfoPageableResponse;
 import com.azshiptest.azshipapp.dto.ShipmentStatusUpdateRequest;
-import com.azshiptest.azshipapp.models.Address;
-import com.azshiptest.azshipapp.models.ShipmentInfo;
+import com.azshiptest.azshipapp.infra.entities.AddressEntity;
+import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
@@ -20,7 +20,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
 import java.util.Optional;
 
 @RestController
@@ -50,19 +52,22 @@ public class ShipmentController {
         this.findAllShipmentsByTaxPayerRegistrationNoQuery = findAllShipmentsByTaxPayerRegistrationNoQuery;
     }
     @PostMapping
-    public ResponseEntity<ShipmentInfo> save(@RequestBody @Valid ShipmentInfoFormInput shipmentInfoFormInput) {
-        ShipmentInfo shipmentInfo = registerShipmentTrackingCommand.execute(shipmentInfoFormInput);
-        return ResponseEntity.ok(shipmentInfo);
+    public ResponseEntity<Void> save(@RequestBody @Valid ShipmentInfoFormInput shipmentInfoFormInput,
+                                             UriComponentsBuilder uriBuilder) {
+        ShipmentEntity shipmentEntity = registerShipmentTrackingCommand.execute(shipmentInfoFormInput);
+        URI location = uriBuilder.path("/api/shipments/{trackingID}")
+                .buildAndExpand(shipmentEntity.getTrackingID()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/tracking-id/{trackingID}")
-    public ResponseEntity<ShipmentInfo> findShipmentInfoByTrackingID(@PathVariable String trackingID) {
-        Optional<ShipmentInfo> shipmentInfo = findShipmentByTrackingIDQuery.execute(trackingID);
+    @GetMapping("/{trackingID}")
+    public ResponseEntity<ShipmentEntity> findShipmentInfoByTrackingID(@PathVariable String trackingID) {
+        Optional<ShipmentEntity> shipmentInfo = findShipmentByTrackingIDQuery.execute(trackingID);
         return ResponseEntity.ok(shipmentInfo.get());
     }
 
-    @GetMapping("/tax-payer-registration-number/{taxPayerRegistrationNo}")
-    public ResponseEntity<ShipmentInfoPageableResponse> findAllShipmentByTaxPayerRegistrationNo(@PathVariable String taxPayerRegistrationNo,
+    @GetMapping
+    public ResponseEntity<ShipmentInfoPageableResponse> findAllShipmentByTaxPayerRegistrationNo(@RequestParam String taxPayerRegistrationNo,
                                                                                                 @RequestParam(defaultValue = "0") int pageNo,
                                                                                                 @RequestParam(defaultValue = "3") int pageSize) {
         Pageable pageable = PageRequest.of(pageNo, pageSize);
@@ -79,7 +84,7 @@ public class ShipmentController {
         return ResponseEntity.ok(shipments);
     }
 
-    @PutMapping("/update-status/{trackingID}")
+    @PatchMapping("/{trackingID}/status")
     @Transactional
     public ResponseEntity<?> updateShipmentInfoStatusByTrackingID(@PathVariable String trackingID,
                                                                              @RequestBody ShipmentStatusUpdateRequest request) {
@@ -89,16 +94,16 @@ public class ShipmentController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
     }
 
-    @PutMapping("/update-recipient-address/{trackingID}")
+    @PatchMapping("/{trackingID}/recipientAddress")
     @Transactional
     public ResponseEntity<?> updateShipmentInfoRecipientAddress(@PathVariable String trackingID,
-                                                                  @RequestBody Address newRecipientAddress) {
-        return (updateShipmentRecipientAddressByTrackingIDCommand.execute(trackingID, newRecipientAddress) > 0) ?
+                                                                  @RequestBody AddressEntity newRecipientAddressEntity) {
+        return (updateShipmentRecipientAddressByTrackingIDCommand.execute(trackingID, newRecipientAddressEntity) > 0) ?
                 ResponseEntity.ok("Recipient address for the shipment of tracking ID " + trackingID + " has been successfully updated!") :
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
     }
 
-    @DeleteMapping("/delete/{trackingID}")
+    @DeleteMapping("/{trackingID}")
     public ResponseEntity<?> deleteShipmentInfoByTrackingID(@PathVariable String trackingID) {
         return (deleteShipmentInfoByTrackingIDCommand.execute(trackingID) > 0) ?
                 ResponseEntity.ok("Shipment info for the shipment of tracking ID " + trackingID + " has been successfully deleted.") :

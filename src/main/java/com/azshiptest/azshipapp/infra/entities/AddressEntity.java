@@ -1,6 +1,7 @@
 package com.azshiptest.azshipapp.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -29,6 +30,7 @@ public class Address {
 
     @Enumerated(EnumType.STRING)
     @NotNull
+
     private StateCodeEnum stateCodeEnum;
 
     @NotNull

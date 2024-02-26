@@ -1,9 +1,9 @@
 package com.azshiptest.azshipapp.application.commands;
 
-import com.azshiptest.azshipapp.models.Address;
+import com.azshiptest.azshipapp.infra.entities.AddressEntity;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
-import com.azshiptest.azshipapp.models.ShipmentInfo;
+import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
 import org.springframework.stereotype.Component;
 
@@ -19,17 +19,17 @@ public class RegisterShipmentTrackingCommand {
         this.shipmentInfoRepository = shipmentInfoRepository;
     }
 
-    public ShipmentInfo execute(ShipmentInfoFormInput shipmentInfoFormInput) {
-        ShipmentInfo shipmentInfo = buildShipmentInfo(shipmentInfoFormInput);
-        this.shipmentInfoRepository.save(shipmentInfo);
-        return shipmentInfo;
+    public ShipmentEntity execute(ShipmentInfoFormInput shipmentInfoFormInput) {
+        ShipmentEntity shipmentEntity = buildShipmentInfo(shipmentInfoFormInput);
+        this.shipmentInfoRepository.save(shipmentEntity);
+        return shipmentEntity;
     }
 
-    public ShipmentInfo buildShipmentInfo(ShipmentInfoFormInput shipmentInfoFormInput) {
-        Address senderAddress = shipmentInfoFormInput.senderAddress();
-        Address recipientAddress = shipmentInfoFormInput.recipientAddress();
+    public ShipmentEntity buildShipmentInfo(ShipmentInfoFormInput shipmentInfoFormInput) {
+        AddressEntity senderAddressEntity = shipmentInfoFormInput.senderAddressEntity();
+        AddressEntity recipientAddressEntity = shipmentInfoFormInput.recipientAddressEntity();
 
-        String trackingID = buildTrackingID(senderAddress, recipientAddress);
+        String trackingID = buildTrackingID(senderAddressEntity, recipientAddressEntity);
 
         LocalDate postingDate = LocalDate.now();
         LocalDate estimatedArrivalDate = postingDate.plusDays(calculateDaysToAdd(shipmentInfoFormInput.weight()));
@@ -37,11 +37,11 @@ public class RegisterShipmentTrackingCommand {
         Optional<Integer> weight = shipmentInfoFormInput.weight();
         Optional<Float> cubingMeasurement = shipmentInfoFormInput.cubingMeasurement();
 
-        return ShipmentInfo.builder()
+        return ShipmentEntity.builder()
                 .taxPayerRegistrationNo(shipmentInfoFormInput.taxPayerRegistrationNo())
                 .trackingID(trackingID)
-                .senderAddress(senderAddress)
-                .recipientAddress(recipientAddress)
+                .senderAddressEntity(senderAddressEntity)
+                .recipientAddressEntity(recipientAddressEntity)
                 .shipmentStatus(ShipmentStatusEnum.POSTED)
                 .postingDate(postingDate)
                 .estimatedArrivalDate(estimatedArrivalDate)
@@ -51,9 +51,9 @@ public class RegisterShipmentTrackingCommand {
                 .build();
     }
 
-    private String buildTrackingID(Address senderAddress, Address recipientAddress) {
-        String senderStateCode = senderAddress.getStateCodeEnum().toString();
-        String recipientStateCode = recipientAddress.getStateCodeEnum().toString();
+    private String buildTrackingID(AddressEntity senderAddressEntity, AddressEntity recipientAddressEntity) {
+        String senderStateCode = senderAddressEntity.getStateCodeEnum().toString();
+        String recipientStateCode = recipientAddressEntity.getStateCodeEnum().toString();
 
         StringBuilder trackingIDBuilder = new StringBuilder();
         trackingIDBuilder.append(senderStateCode);
