@@ -9,15 +9,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 @Repository
-public interface AddressRepository extends JpaRepository<AddressEntity, Long>, AddressRepositoryPort {
+public interface AddressRepository extends JpaRepository<AddressEntity, UUID>, AddressRepositoryPort {
 
     @Override
     @Modifying
-    @Query("UPDATE Address a SET a.streetName = :streetName, a.neighbourhood = :neighbourhood, " +
+    @Query("UPDATE AddressEntity a SET a.streetName = :streetName, a.neighbourhood = :neighbourhood, " +
             "a.city = :city, a.stateCodeEnum = :stateCodeEnum, " +
             "a.addressNumber = :addressNumber, a.zipCode = :zipCode WHERE a.id = :addressId")
-    int updateAddressById(@Param("addressId") Long addressId, @Param("streetName") String streetName,
+    int updateAddressById(@Param("addressId") UUID addressId, @Param("streetName") String streetName,
                           @Param("neighbourhood") String neighbourhood, @Param("city") String city,
                           @Param("stateCodeEnum") StateCodeEnum stateCodeEnum, @Param("addressNumber") String addressNumber,
                           @Param("zipCode") String zipCode);

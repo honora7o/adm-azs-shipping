@@ -2,34 +2,34 @@ package com.azshiptest.azshipapp.application.commands;
 
 import com.azshiptest.azshipapp.dto.ChangeAddressRequest;
 import com.azshiptest.azshipapp.infra.repositories.adapters.AddressRepository;
-import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
-import com.azshiptest.azshipapp.infra.entities.AddressEntity;
+import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentRepository;
 import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Component
-public class UpdateShipmentRecipientAddressByTrackingIDCommand {
-    private final ShipmentInfoRepository shipmentInfoRepository;
+public class UpdateShipmentRecipientAddressByTrackingNoCommand {
+    private final ShipmentRepository shipmentRepository;
     private final AddressRepository addressRepository;
 
-    public UpdateShipmentRecipientAddressByTrackingIDCommand(ShipmentInfoRepository shipmentInfoRepository, AddressRepository addressRepository) {
-        this.shipmentInfoRepository = shipmentInfoRepository;
+    public UpdateShipmentRecipientAddressByTrackingNoCommand(ShipmentRepository shipmentRepository, AddressRepository addressRepository) {
+        this.shipmentRepository = shipmentRepository;
         this.addressRepository = addressRepository;
     }
 
     @Transactional
-    public int execute(String trackingID, ChangeAddressRequest newAddress) {
-        Optional<ShipmentEntity> optionalShipmentInfo = shipmentInfoRepository.findByTrackingID(trackingID);
+    public int execute(UUID trackingNo, ChangeAddressRequest newAddress) {
+        Optional<ShipmentEntity> optionalShipmentInfo = shipmentRepository.findByTrackingNo(trackingNo);
 
         if (optionalShipmentInfo.isEmpty()) {
             return 0;
         }
 
         ShipmentEntity shipmentEntity = optionalShipmentInfo.get();
-        Long addressId = shipmentEntity.getRecipientAddressEntity().getId();
+        UUID addressId = shipmentEntity.getRecipientAddress().getId();
 
         addressRepository.updateAddressById(addressId, newAddress.streetName(),
                 newAddress.neighbourhood(), newAddress.city(),

@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Entity
 @Table(name = "shipments_db")
@@ -17,17 +18,20 @@ import java.time.LocalDate;
 public class ShipmentEntity {
 
     @Id
-    private String trackingID;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private UUID id;
+
+    private UUID trackingNo;
 
     private String taxPayerRegistrationNo;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sender_address_id")
-    private AddressEntity senderAddressEntity;
+    private AddressEntity senderAddress;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipient_address_id")
-    private AddressEntity recipientAddressEntity;
+    private AddressEntity recipientAddress;
 
     @Enumerated(EnumType.STRING)
     private ShipmentStatusEnum shipmentStatus;
@@ -37,4 +41,11 @@ public class ShipmentEntity {
     private BigDecimal value;
     private Integer weight;
     private Float cubingMeasurement;
+
+    @PrePersist
+    private void ensureTrackingNo() {
+        if (trackingNo == null) {
+            trackingNo = UUID.randomUUID();
+        }
+    }
 }

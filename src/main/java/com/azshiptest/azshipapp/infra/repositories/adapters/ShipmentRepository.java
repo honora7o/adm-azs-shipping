@@ -1,6 +1,6 @@
 package com.azshiptest.azshipapp.infra.repositories.adapters;
 
-import com.azshiptest.azshipapp.infra.repositories.ports.ShipmentInfoRepositoryPort;
+import com.azshiptest.azshipapp.infra.repositories.ports.ShipmentRepositoryPort;
 import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import org.springframework.data.domain.Page;
@@ -12,24 +12,25 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Repository
-public interface ShipmentInfoRepository extends JpaRepository<ShipmentEntity, String>, ShipmentInfoRepositoryPort {
+public interface ShipmentRepository extends JpaRepository<ShipmentEntity, UUID>, ShipmentRepositoryPort {
 
     @Override
     ShipmentEntity save(ShipmentEntity shipmentEntity);
 
     @Override
-    int deleteByTrackingID(String trackingID);
+    int deleteByTrackingNo(UUID trackingNo);
 
     @Override
     Page<ShipmentEntity> findAllByTaxPayerRegistrationNo(String taxPayerRegistrationNo, Pageable pageable);
 
     @Override
-    @Query("SELECT s FROM ShipmentInfo s " +
+    @Query("SELECT s FROM ShipmentEntity s " +
             "LEFT JOIN s.senderAddress sender " +
             "LEFT JOIN s.recipientAddress recipient " +
-            "WHERE LOWER(s.trackingID) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
+            "WHERE LOWER(CAST(s.trackingNo AS text)) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(sender.streetName) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(sender.neighbourhood) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(sender.city) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
@@ -44,10 +45,10 @@ public interface ShipmentInfoRepository extends JpaRepository<ShipmentEntity, St
                                                   Pageable pageable);
 
     @Override
-    Optional<ShipmentEntity> findByTrackingID(String trackingID);
+    Optional<ShipmentEntity> findByTrackingNo(UUID trackingNo);
     @Override
     @Modifying
-    @Query("UPDATE ShipmentInfo s SET s.shipmentStatus = :shipmentStatus WHERE s.trackingID = :trackingID")
-    int updateShipmentStatusByTrackingID(@Param("trackingID") String trackingID, @Param("shipmentStatus") ShipmentStatusEnum shipmentStatus);
+    @Query("UPDATE ShipmentEntity s SET s.shipmentStatus = :shipmentStatus WHERE s.trackingNo = :trackingNo")
+    int updateShipmentStatusByTrackingNo(@Param("trackingNo") UUID trackingNo, @Param("shipmentStatus") ShipmentStatusEnum shipmentStatus);
 }
 

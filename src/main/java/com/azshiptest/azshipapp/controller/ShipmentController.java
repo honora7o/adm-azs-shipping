@@ -1,17 +1,16 @@
 package com.azshiptest.azshipapp.controller;
 
-import com.azshiptest.azshipapp.application.commands.DeleteShipmentByTrackingIDCommand;
+import com.azshiptest.azshipapp.application.commands.DeleteShipmentByTrackingNoCommand;
 import com.azshiptest.azshipapp.application.commands.RegisterShipmentTrackingCommand;
-import com.azshiptest.azshipapp.application.commands.UpdateShipmentRecipientAddressByTrackingIDCommand;
-import com.azshiptest.azshipapp.application.commands.UpdateShipmentStatusByTrackingIDCommand;
+import com.azshiptest.azshipapp.application.commands.UpdateShipmentRecipientAddressByTrackingNoCommand;
+import com.azshiptest.azshipapp.application.commands.UpdateShipmentStatusByTrackingNoCommand;
 import com.azshiptest.azshipapp.application.queries.FindAllShipmentsByTaxPayerRegistrationNoQuery;
-import com.azshiptest.azshipapp.application.queries.FindShipmentByTrackingIDQuery;
+import com.azshiptest.azshipapp.application.queries.FindShipmentByTrackingNoQuery;
 import com.azshiptest.azshipapp.application.queries.ShipmentInfoUniversalSearchQuery;
 import com.azshiptest.azshipapp.dto.ChangeAddressRequest;
 import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
 import com.azshiptest.azshipapp.dto.ShipmentInfoPageableResponse;
 import com.azshiptest.azshipapp.dto.ShipmentStatusUpdateRequest;
-import com.azshiptest.azshipapp.infra.entities.AddressEntity;
 import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import jakarta.transaction.Transactional;
@@ -25,45 +24,46 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("api/shipments")
 public class ShipmentController {
     private final RegisterShipmentTrackingCommand registerShipmentTrackingCommand;
     private final ShipmentInfoUniversalSearchQuery shipmentInfoUniversalSearchQuery;
-    private final FindShipmentByTrackingIDQuery findShipmentByTrackingIDQuery;
-    private final UpdateShipmentStatusByTrackingIDCommand updateShipmentStatusByTrackingIDCommand;
-    private final UpdateShipmentRecipientAddressByTrackingIDCommand updateShipmentRecipientAddressByTrackingIDCommand;
-    private final DeleteShipmentByTrackingIDCommand deleteShipmentInfoByTrackingIDCommand;
+    private final FindShipmentByTrackingNoQuery findShipmentByTrackingNoQuery;
+    private final UpdateShipmentStatusByTrackingNoCommand updateShipmentStatusByTrackingNoCommand;
+    private final UpdateShipmentRecipientAddressByTrackingNoCommand updateShipmentRecipientAddressByTrackingNoCommand;
+    private final DeleteShipmentByTrackingNoCommand deleteShipmentByTrackingNoCommand;
     private final FindAllShipmentsByTaxPayerRegistrationNoQuery findAllShipmentsByTaxPayerRegistrationNoQuery;
 
     public ShipmentController(RegisterShipmentTrackingCommand registerShipmentTrackingCommand,
                               ShipmentInfoUniversalSearchQuery shipmentInfoUniversalSearchQuery,
-                              FindShipmentByTrackingIDQuery findShipmentByTrackingIDQuery,
-                              UpdateShipmentStatusByTrackingIDCommand updateShipmentStatusByTrackingIDCommand,
-                              UpdateShipmentRecipientAddressByTrackingIDCommand updateShipmentRecipientAddressByTrackingIDCommand,
-                              DeleteShipmentByTrackingIDCommand deleteShipmentInfoByTrackingIDCommand,
+                              FindShipmentByTrackingNoQuery findShipmentByTrackingNoQuery,
+                              UpdateShipmentStatusByTrackingNoCommand updateShipmentStatusByTrackingNoCommand,
+                              UpdateShipmentRecipientAddressByTrackingNoCommand updateShipmentRecipientAddressByTrackingNoCommand,
+                              DeleteShipmentByTrackingNoCommand deleteShipmentInfoByTrackingNoCommand,
                               FindAllShipmentsByTaxPayerRegistrationNoQuery findAllShipmentsByTaxPayerRegistrationNoQuery) {
         this.registerShipmentTrackingCommand = registerShipmentTrackingCommand;
         this.shipmentInfoUniversalSearchQuery = shipmentInfoUniversalSearchQuery;
-        this.findShipmentByTrackingIDQuery = findShipmentByTrackingIDQuery;
-        this.updateShipmentStatusByTrackingIDCommand = updateShipmentStatusByTrackingIDCommand;
-        this.updateShipmentRecipientAddressByTrackingIDCommand = updateShipmentRecipientAddressByTrackingIDCommand;
-        this.deleteShipmentInfoByTrackingIDCommand = deleteShipmentInfoByTrackingIDCommand;
+        this.findShipmentByTrackingNoQuery = findShipmentByTrackingNoQuery;
+        this.updateShipmentStatusByTrackingNoCommand = updateShipmentStatusByTrackingNoCommand;
+        this.updateShipmentRecipientAddressByTrackingNoCommand = updateShipmentRecipientAddressByTrackingNoCommand;
+        this.deleteShipmentByTrackingNoCommand = deleteShipmentInfoByTrackingNoCommand;
         this.findAllShipmentsByTaxPayerRegistrationNoQuery = findAllShipmentsByTaxPayerRegistrationNoQuery;
     }
     @PostMapping
     public ResponseEntity<Void> save(@RequestBody @Valid ShipmentInfoFormInput shipmentInfoFormInput,
                                              UriComponentsBuilder uriBuilder) {
         ShipmentEntity shipmentEntity = registerShipmentTrackingCommand.execute(shipmentInfoFormInput);
-        URI location = uriBuilder.path("/api/shipments/{trackingID}")
-                .buildAndExpand(shipmentEntity.getTrackingID()).toUri();
+        URI location = uriBuilder.path("/api/shipments/{trackingNo}")
+                .buildAndExpand(shipmentEntity.getTrackingNo()).toUri();
         return ResponseEntity.created(location).build();
     }
 
-    @GetMapping("/{trackingID}")
-    public ResponseEntity<ShipmentEntity> findShipmentInfoByTrackingID(@PathVariable String trackingID) {
-        Optional<ShipmentEntity> shipmentInfo = findShipmentByTrackingIDQuery.execute(trackingID);
+    @GetMapping("/{trackingNo}")
+    public ResponseEntity<ShipmentEntity> findShipmentInfoByTrackingNo(@PathVariable UUID trackingNo) {
+        Optional<ShipmentEntity> shipmentInfo = findShipmentByTrackingNoQuery.execute(trackingNo);
         return ResponseEntity.ok(shipmentInfo.get());
     }
 
@@ -85,29 +85,29 @@ public class ShipmentController {
         return ResponseEntity.ok(shipments);
     }
 
-    @PatchMapping("/{trackingID}/status")
+    @PatchMapping("/{trackingNo}/status")
     @Transactional
-    public ResponseEntity<?> updateShipmentInfoStatusByTrackingID(@PathVariable String trackingID,
+    public ResponseEntity<?> updateShipmentInfoStatusByTrackingNo(@PathVariable UUID trackingNo,
                                                                              @RequestBody ShipmentStatusUpdateRequest request) {
         ShipmentStatusEnum newShipmentStatus = request.shipmentStatusEnum();
-        return (updateShipmentStatusByTrackingIDCommand.execute(trackingID, newShipmentStatus) > 0) ?
-                ResponseEntity.ok("Shipment status for the shipment of tracking ID " + trackingID + " has been successfully updated!") :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
+        return (updateShipmentStatusByTrackingNoCommand.execute(trackingNo, newShipmentStatus) > 0) ?
+                ResponseEntity.ok("Shipment status for the shipment of tracking number " + trackingNo + " has been successfully updated!") :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking number " + trackingNo + " not found");
     }
 
-    @PatchMapping("/{trackingID}/recipientAddress")
+    @PatchMapping("/{trackingNo}/recipientAddress")
     @Transactional
-    public ResponseEntity<?> updateShipmentInfoRecipientAddress(@PathVariable String trackingID,
+    public ResponseEntity<?> updateShipmentInfoRecipientAddress(@PathVariable UUID trackingNo,
                                                                   @RequestBody ChangeAddressRequest changeAddressRequest) {
-        return (updateShipmentRecipientAddressByTrackingIDCommand.execute(trackingID, changeAddressRequest) > 0) ?
-                ResponseEntity.ok("Recipient address for the shipment of tracking ID " + trackingID + " has been successfully updated!") :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
+        return (updateShipmentRecipientAddressByTrackingNoCommand.execute(trackingNo, changeAddressRequest) > 0) ?
+                ResponseEntity.ok("Recipient address for the shipment of tracking number " + trackingNo + " has been successfully updated!") :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking number " + trackingNo + " not found");
     }
 
-    @DeleteMapping("/{trackingID}")
-    public ResponseEntity<?> deleteShipmentInfoByTrackingID(@PathVariable String trackingID) {
-        return (deleteShipmentInfoByTrackingIDCommand.execute(trackingID) > 0) ?
-                ResponseEntity.ok("Shipment info for the shipment of tracking ID " + trackingID + " has been successfully deleted.") :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
+    @DeleteMapping("/{trackingNo}")
+    public ResponseEntity<?> deleteShipmentInfoByTrackingNo(@PathVariable UUID trackingNo) {
+        return (deleteShipmentByTrackingNoCommand.execute(trackingNo) > 0) ?
+                ResponseEntity.ok("Shipment info for the shipment of tracking number " + trackingNo + " has been successfully deleted.") :
+                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking number " + trackingNo + " not found");
     }
 }
