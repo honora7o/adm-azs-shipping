@@ -1,7 +1,7 @@
 package com.azshiptest.azshipapp.application.queries;
 
 import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
-import com.azshiptest.azshipapp.models.ShipmentInfo;
+import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -14,7 +14,7 @@ public class FindShipmentByTrackingIDQuery {
         this.shipmentInfoRepository = shipmentInfoRepository;
     }
 
-    public Optional<ShipmentInfo> execute(String trackingID) {
+    public Optional<ShipmentEntity> execute(String trackingID) {
         return shipmentInfoRepository.findByTrackingID(trackingID);
     }
 }

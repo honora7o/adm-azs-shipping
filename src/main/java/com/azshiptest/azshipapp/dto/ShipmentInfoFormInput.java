@@ -1,7 +1,7 @@
 package com.azshiptest.azshipapp.dto;
 
 
-import com.azshiptest.azshipapp.models.Address;
+import com.azshiptest.azshipapp.infra.entities.AddressEntity;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
@@ -14,10 +14,10 @@ public record ShipmentInfoFormInput(
         String taxPayerRegistrationNo,
 
         @NotNull
-        Address senderAddress,
+        AddressEntity senderAddressEntity,
 
         @NotNull
-        Address recipientAddress,
+        AddressEntity recipientAddressEntity,
 
         @NotNull
         BigDecimal value,

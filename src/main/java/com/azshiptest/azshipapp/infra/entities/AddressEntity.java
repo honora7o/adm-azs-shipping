@@ -1,7 +1,7 @@
-package com.azshiptest.azshipapp.models;
+package com.azshiptest.azshipapp.infra.entities;
 
+import com.azshiptest.azshipapp.models.StateCodeEnum;
 import jakarta.persistence.*;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
@@ -13,7 +13,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Address {
+public class AddressEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

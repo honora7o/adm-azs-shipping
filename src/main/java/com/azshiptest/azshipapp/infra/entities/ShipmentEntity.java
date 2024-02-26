@@ -1,5 +1,6 @@
-package com.azshiptest.azshipapp.models;
+package com.azshiptest.azshipapp.infra.entities;
 
+import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +14,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ShipmentInfo {
+public class ShipmentEntity {
 
     @Id
     private String trackingID;
@@ -22,11 +23,11 @@ public class ShipmentInfo {
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "sender_address_id")
-    private Address senderAddress;
+    private AddressEntity senderAddressEntity;
 
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "recipient_address_id")
-    private Address recipientAddress;
+    private AddressEntity recipientAddressEntity;
 
     @Enumerated(EnumType.STRING)
     private ShipmentStatusEnum shipmentStatus;

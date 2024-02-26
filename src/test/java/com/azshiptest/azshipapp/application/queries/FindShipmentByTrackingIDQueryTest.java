@@ -1,7 +1,7 @@
 package com.azshiptest.azshipapp.application.queries;
 
 import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
-import com.azshiptest.azshipapp.models.ShipmentInfo;
+import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,12 +25,12 @@ public class FindShipmentByTrackingIDQueryTest {
     @Test
     void execute_ShouldReturnShipmentInfo_WhenTrackingIDExists() {
         String trackingID = "MG123456789SP";
-        ShipmentInfo expectedShipmentInfo = new ShipmentInfo();
-        when(mockRepository.findByTrackingID(trackingID)).thenReturn(Optional.of(expectedShipmentInfo));
+        ShipmentEntity expectedShipmentEntity = new ShipmentEntity();
+        when(mockRepository.findByTrackingID(trackingID)).thenReturn(Optional.of(expectedShipmentEntity));
 
-        Optional<ShipmentInfo> result = query.execute(trackingID);
+        Optional<ShipmentEntity> result = query.execute(trackingID);
 
-        assertEquals(expectedShipmentInfo, result.orElse(null));
+        assertEquals(expectedShipmentEntity, result.orElse(null));
     }
 
     @Test
@@ -38,7 +38,7 @@ public class FindShipmentByTrackingIDQueryTest {
         String trackingID = "INVALIDTRACKINGID";
         when(mockRepository.findByTrackingID(trackingID)).thenReturn(Optional.empty());
 
-        Optional<ShipmentInfo> result = query.execute(trackingID);
+        Optional<ShipmentEntity> result = query.execute(trackingID);
 
         assertEquals(Optional.empty(), result);
     }

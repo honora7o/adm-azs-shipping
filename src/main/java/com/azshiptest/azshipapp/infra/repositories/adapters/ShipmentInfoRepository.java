@@ -1,7 +1,7 @@
 package com.azshiptest.azshipapp.infra.repositories.adapters;
 
 import com.azshiptest.azshipapp.infra.repositories.ports.ShipmentInfoRepositoryPort;
-import com.azshiptest.azshipapp.models.ShipmentInfo;
+import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,16 +14,16 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, String>, ShipmentInfoRepositoryPort {
+public interface ShipmentInfoRepository extends JpaRepository<ShipmentEntity, String>, ShipmentInfoRepositoryPort {
 
     @Override
-    ShipmentInfo save(ShipmentInfo shipmentInfo);
+    ShipmentEntity save(ShipmentEntity shipmentEntity);
 
     @Override
     int deleteByTrackingID(String trackingID);
 
     @Override
-    Page<ShipmentInfo> findAllByTaxPayerRegistrationNo(String taxPayerRegistrationNo, Pageable pageable);
+    Page<ShipmentEntity> findAllByTaxPayerRegistrationNo(String taxPayerRegistrationNo, Pageable pageable);
 
     @Override
     @Query("SELECT s FROM ShipmentInfo s " +
@@ -40,11 +40,11 @@ public interface ShipmentInfoRepository extends JpaRepository<ShipmentInfo, Stri
             "LOWER(recipient.city) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(CAST(recipient.stateCodeEnum AS string)) LIKE LOWER(CONCAT('%', :keyword, '%')) OR " +
             "LOWER(recipient.zipCode) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    Page<ShipmentInfo> universalSearchShipments(@Param("keyword") String keyword,
-                                       Pageable pageable);
+    Page<ShipmentEntity> universalSearchShipments(@Param("keyword") String keyword,
+                                                  Pageable pageable);
 
     @Override
-    Optional<ShipmentInfo> findByTrackingID(String trackingID);
+    Optional<ShipmentEntity> findByTrackingID(String trackingID);
     @Override
     @Modifying
     @Query("UPDATE ShipmentInfo s SET s.shipmentStatus = :shipmentStatus WHERE s.trackingID = :trackingID")

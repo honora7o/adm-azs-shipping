@@ -2,8 +2,8 @@ package com.azshiptest.azshipapp.application.commands;
 
 import com.azshiptest.azshipapp.infra.repositories.adapters.AddressRepository;
 import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
-import com.azshiptest.azshipapp.models.Address;
-import com.azshiptest.azshipapp.models.ShipmentInfo;
+import com.azshiptest.azshipapp.infra.entities.AddressEntity;
+import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
@@ -20,20 +20,20 @@ public class UpdateShipmentRecipientAddressByTrackingIDCommand {
     }
 
     @Transactional
-    public int execute(String trackingID, Address newRecipientAddress) {
-        Optional<ShipmentInfo> optionalShipmentInfo = shipmentInfoRepository.findByTrackingID(trackingID);
+    public int execute(String trackingID, AddressEntity newRecipientAddressEntity) {
+        Optional<ShipmentEntity> optionalShipmentInfo = shipmentInfoRepository.findByTrackingID(trackingID);
 
         if (optionalShipmentInfo.isEmpty()) {
             return 0;
         }
 
-        ShipmentInfo shipmentInfo = optionalShipmentInfo.get();
-        Long addressId = shipmentInfo.getRecipientAddress().getId();
+        ShipmentEntity shipmentEntity = optionalShipmentInfo.get();
+        Long addressId = shipmentEntity.getRecipientAddressEntity().getId();
 
-        addressRepository.updateAddressById(addressId, newRecipientAddress.getStreetName(),
-                newRecipientAddress.getNeighbourhood(), newRecipientAddress.getCity(),
-                newRecipientAddress.getStateCodeEnum(), newRecipientAddress.getAddressNumber(),
-                newRecipientAddress.getZipCode());
+        addressRepository.updateAddressById(addressId, newRecipientAddressEntity.getStreetName(),
+                newRecipientAddressEntity.getNeighbourhood(), newRecipientAddressEntity.getCity(),
+                newRecipientAddressEntity.getStateCodeEnum(), newRecipientAddressEntity.getAddressNumber(),
+                newRecipientAddressEntity.getZipCode());
 
         return 1;
     }

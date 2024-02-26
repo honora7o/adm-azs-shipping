@@ -2,7 +2,7 @@ package com.azshiptest.azshipapp.application.queries;
 
 import com.azshiptest.azshipapp.dto.ShipmentInfoPageableResponse;
 import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoRepository;
-import com.azshiptest.azshipapp.models.ShipmentInfo;
+import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -16,7 +16,7 @@ public class FindAllShipmentsByTaxPayerRegistrationNoQuery {
     }
 
     public ShipmentInfoPageableResponse execute(String taxPayerRegistrationNo, Pageable pageable) {
-        Page<ShipmentInfo> shipmentInfo = shipmentInfoRepository.findAllByTaxPayerRegistrationNo(taxPayerRegistrationNo, pageable);
+        Page<ShipmentEntity> shipmentInfo = shipmentInfoRepository.findAllByTaxPayerRegistrationNo(taxPayerRegistrationNo, pageable);
         ShipmentInfoPageableResponse response = new ShipmentInfoPageableResponse(
                 shipmentInfo.getContent(),
                 shipmentInfo.getPageable().getPageNumber(),
