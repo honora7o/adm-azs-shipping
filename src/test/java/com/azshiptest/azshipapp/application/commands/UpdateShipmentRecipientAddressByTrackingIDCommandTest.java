@@ -5,7 +5,6 @@ import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentInfoReposito
 import com.azshiptest.azshipapp.models.Address;
 import com.azshiptest.azshipapp.models.ShipmentInfo;
 import com.azshiptest.azshipapp.models.StateCodeEnum;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -34,7 +33,7 @@ public class UpdateShipmentRecipientAddressByTrackingIDCommandTest {
     }
 
     @Test
-    void execute_ShouldUpdateRecipientAddress_WhenValidTrackingID() {
+    void shouldUpdateRecipientAddress_WhenValidTrackingID() {
         String trackingID = "MG123456789SP";
         Address newRecipientAddress = Address.builder()
                 .streetName("Av Teste")
@@ -66,7 +65,7 @@ public class UpdateShipmentRecipientAddressByTrackingIDCommandTest {
     }
 
     @Test
-    void execute_ShouldReturnZero_WhenInvalidTrackingID() {
+    void shouldReturnZero_WhenInvalidTrackingID() {
         String trackingID = "INVALIDTRACKINGID";
         Address newRecipientAddress = Address.builder()
                 .streetName("Av Teste")

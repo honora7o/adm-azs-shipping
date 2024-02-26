@@ -34,7 +34,7 @@ public class RegisterShipmentTrackingCommandTest {
     }
 
     @Test
-    void execute() {
+    void registerShipmentTracking() {
         Address senderAddress = Address.builder()
                 .streetName("Afranio Rodrigues")
                 .neighbourhood("Fundinho")
@@ -66,6 +66,7 @@ public class RegisterShipmentTrackingCommandTest {
 
         verify(mockRepository, times(1)).save(savedShipmentInfo);
         verify(mockRepository).save(argThat(argument -> {
+            assertEquals("12345678922", argument.getTaxPayerRegistrationNo());
             assertEquals(senderAddress, argument.getSenderAddress());
             assertEquals(recipientAddress, argument.getRecipientAddress());
             assertTrue(argument.getTrackingID().matches("[A-Z]{2}\\d{9}[A-Z]{2}")); // not good, only checks if there are 9 rng numbers between 2 capitalized pair of letters
