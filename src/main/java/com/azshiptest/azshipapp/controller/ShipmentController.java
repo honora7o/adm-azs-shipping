@@ -79,7 +79,7 @@ public class ShipmentController {
         return ResponseEntity.ok(shipments);
     }
 
-    @PutMapping("/{trackingID}/update-status")
+    @PutMapping("/update-status/{trackingID}")
     @Transactional
     public ResponseEntity<?> updateShipmentInfoStatusByTrackingID(@PathVariable String trackingID,
                                                                              @RequestBody ShipmentStatusUpdateRequest request) {
@@ -89,7 +89,7 @@ public class ShipmentController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
     }
 
-    @PutMapping("/{trackingID}/update-recipient-address")
+    @PutMapping("/update-recipient-address/{trackingID}")
     @Transactional
     public ResponseEntity<?> updateShipmentInfoRecipientAddress(@PathVariable String trackingID,
                                                                   @RequestBody Address newRecipientAddress) {
@@ -98,7 +98,7 @@ public class ShipmentController {
                 ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking ID " + trackingID + " not found");
     }
 
-    @DeleteMapping("/{trackingID}/delete")
+    @DeleteMapping("/delete/{trackingID}")
     public ResponseEntity<?> deleteShipmentInfoByTrackingID(@PathVariable String trackingID) {
         return (deleteShipmentInfoByTrackingIDCommand.execute(trackingID) > 0) ?
                 ResponseEntity.ok("Shipment info for the shipment of tracking ID " + trackingID + " has been successfully deleted.") :
