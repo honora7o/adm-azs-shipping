@@ -1,9 +1,8 @@
 package com.azshiptest.azshipapp.application.commands;
 
-import com.azshiptest.azshipapp.dto.ChangeAddressRequest;
+import com.azshiptest.azshipapp.dto.AddressDTO;
 import com.azshiptest.azshipapp.infra.repositories.adapters.AddressRepository;
 import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentRepository;
-import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +20,7 @@ public class UpdateShipmentRecipientAddressByTrackingNoCommand {
     }
 
     @Transactional
-    public Optional<String> execute(UUID trackingNo, ChangeAddressRequest newAddress) {
+    public Optional<String> execute(UUID trackingNo, AddressDTO newAddress) {
         return shipmentRepository.findByTrackingNo(trackingNo)
                 .map(shipment -> {
                     updateAddress(shipment.getRecipientAddress().getId(), newAddress);
@@ -30,7 +29,7 @@ public class UpdateShipmentRecipientAddressByTrackingNoCommand {
                 .orElse(Optional.empty());
     }
 
-    private void updateAddress(UUID addressId, ChangeAddressRequest newAddress) {
+    private void updateAddress(UUID addressId, AddressDTO newAddress) {
         addressRepository.updateAddressById(
                 addressId,
                 newAddress.streetName(),

@@ -7,10 +7,7 @@ import com.azshiptest.azshipapp.application.commands.UpdateShipmentStatusByTrack
 import com.azshiptest.azshipapp.application.queries.FindAllShipmentsByTaxPayerRegistrationNoQuery;
 import com.azshiptest.azshipapp.application.queries.FindShipmentByTrackingNoQuery;
 import com.azshiptest.azshipapp.application.queries.ShipmentInfoUniversalSearchQuery;
-import com.azshiptest.azshipapp.dto.ChangeAddressRequest;
-import com.azshiptest.azshipapp.dto.ShipmentInfoFormInput;
-import com.azshiptest.azshipapp.dto.ShipmentInfoPageableResponse;
-import com.azshiptest.azshipapp.dto.ShipmentStatusUpdateRequest;
+import com.azshiptest.azshipapp.dto.*;
 import com.azshiptest.azshipapp.infra.entities.ShipmentEntity;
 import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import jakarta.transaction.Transactional;
@@ -62,9 +59,11 @@ public class ShipmentController {
     }
 
     @GetMapping("/{trackingNo}")
-    public ResponseEntity<ShipmentEntity> findShipmentInfoByTrackingNo(@PathVariable UUID trackingNo) {
-        Optional<ShipmentEntity> shipmentInfo = findShipmentByTrackingNoQuery.execute(trackingNo);
-        return ResponseEntity.ok(shipmentInfo.get());
+    public ResponseEntity<ShipmentDTO> findShipmentInfoByTrackingNo(@PathVariable UUID trackingNo) {
+        Optional<ShipmentDTO> shipmentInfo = findShipmentByTrackingNoQuery.execute(trackingNo);
+        return shipmentInfo
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
@@ -99,8 +98,8 @@ public class ShipmentController {
     @PatchMapping("/{trackingNo}/recipientAddress")
     @Transactional
     public ResponseEntity<String> updateShipmentInfoRecipientAddress(@PathVariable UUID trackingNo,
-                                                                  @RequestBody ChangeAddressRequest changeAddressRequest) {
-        Optional<String> updateResult = updateShipmentRecipientAddressByTrackingNoCommand.execute(trackingNo, changeAddressRequest);
+                                                                  @RequestBody AddressDTO addressDTO) {
+        Optional<String> updateResult = updateShipmentRecipientAddressByTrackingNoCommand.execute(trackingNo, addressDTO);
 
         return updateResult
                 .map(ResponseEntity::ok)
