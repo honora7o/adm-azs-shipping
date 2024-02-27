@@ -26,8 +26,8 @@ public class RegisterShipmentTrackingCommand {
     }
 
     public ShipmentEntity buildShipmentInfo(ShipmentInfoFormInput shipmentInfoFormInput) {
-        AddressEntity senderAddressEntity = shipmentInfoFormInput.senderAddress();
-        AddressEntity recipientAddressEntity = shipmentInfoFormInput.recipientAddress();
+        AddressEntity senderAddressEntity = AddressEntity.fromDTO(shipmentInfoFormInput.senderAddress());
+        AddressEntity recipientAddressEntity = AddressEntity.fromDTO(shipmentInfoFormInput.recipientAddress());
 
         LocalDate postingDate = LocalDate.now();
         LocalDate estimatedArrivalDate = postingDate.plusDays(calculateDaysToAdd(shipmentInfoFormInput.weight()));

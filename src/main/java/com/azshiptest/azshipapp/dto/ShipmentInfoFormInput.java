@@ -14,10 +14,10 @@ public record ShipmentInfoFormInput(
         String taxPayerRegistrationNo,
 
         @NotNull
-        AddressEntity senderAddress,
+        AddressDTO senderAddress,
 
         @NotNull
-        AddressEntity recipientAddress,
+        AddressDTO recipientAddress,
 
         @NotNull
         BigDecimal value,

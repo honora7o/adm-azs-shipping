@@ -1,5 +1,6 @@
 package com.azshiptest.azshipapp.infra.entities;
 
+import com.azshiptest.azshipapp.dto.AddressDTO;
 import com.azshiptest.azshipapp.models.StateCodeEnum;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -31,4 +32,15 @@ public class AddressEntity {
 
     private String addressNumber;
     private String zipCode;
+
+    public static AddressEntity fromDTO(AddressDTO addressDTO) {
+        return AddressEntity.builder()
+                .streetName(addressDTO.streetName())
+                .neighbourhood(addressDTO.neighbourhood())
+                .city(addressDTO.city())
+                .stateCodeEnum(addressDTO.stateCodeEnum())
+                .addressNumber(addressDTO.addressNumber())
+                .zipCode(addressDTO.zipCode())
+                .build();
+    }
 }
