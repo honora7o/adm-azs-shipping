@@ -5,6 +5,7 @@ import com.azshiptest.azshipapp.models.ShipmentStatusEnum;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -16,7 +17,9 @@ public class UpdateShipmentStatusByTrackingNoCommand {
     }
 
     @Transactional
-    public int execute(UUID trackingNo, ShipmentStatusEnum shipmentStatus) {
-        return shipmentRepository.updateShipmentStatusByTrackingNo(trackingNo, shipmentStatus);
+    public Optional<String> execute(UUID trackingNo, ShipmentStatusEnum shipmentStatus) {
+        return shipmentRepository.updateShipmentStatusByTrackingNo(trackingNo, shipmentStatus) > 0 ?
+                Optional.of("Shipment status successfully updated.") :
+                Optional.empty();
     }
 }

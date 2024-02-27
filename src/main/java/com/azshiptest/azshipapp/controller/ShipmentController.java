@@ -87,27 +87,31 @@ public class ShipmentController {
 
     @PatchMapping("/{trackingNo}/status")
     @Transactional
-    public ResponseEntity<?> updateShipmentInfoStatusByTrackingNo(@PathVariable UUID trackingNo,
-                                                                             @RequestBody ShipmentStatusUpdateRequest request) {
+    public ResponseEntity<String> updateShipmentInfoStatusByTrackingNo(@PathVariable UUID trackingNo,
+                                                                       @RequestBody ShipmentStatusUpdateRequest request) {
         ShipmentStatusEnum newShipmentStatus = request.shipmentStatusEnum();
-        return (updateShipmentStatusByTrackingNoCommand.execute(trackingNo, newShipmentStatus) > 0) ?
-                ResponseEntity.ok("Shipment status for the shipment of tracking number " + trackingNo + " has been successfully updated!") :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking number " + trackingNo + " not found");
+        Optional<String> updateResult = updateShipmentStatusByTrackingNoCommand.execute(trackingNo, newShipmentStatus);
+        return updateResult
+                .map(result -> ResponseEntity.ok("Shipment status for the shipment of tracking number " + trackingNo + " has been successfully updated"))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking number " + trackingNo + " not found"));
     }
 
     @PatchMapping("/{trackingNo}/recipientAddress")
     @Transactional
-    public ResponseEntity<?> updateShipmentInfoRecipientAddress(@PathVariable UUID trackingNo,
+    public ResponseEntity<String> updateShipmentInfoRecipientAddress(@PathVariable UUID trackingNo,
                                                                   @RequestBody ChangeAddressRequest changeAddressRequest) {
-        return (updateShipmentRecipientAddressByTrackingNoCommand.execute(trackingNo, changeAddressRequest) > 0) ?
-                ResponseEntity.ok("Recipient address for the shipment of tracking number " + trackingNo + " has been successfully updated!") :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking number " + trackingNo + " not found");
+        Optional<String> updateResult = updateShipmentRecipientAddressByTrackingNoCommand.execute(trackingNo, changeAddressRequest);
+
+        return updateResult
+                .map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking number " + trackingNo + "not found"));
     }
 
     @DeleteMapping("/{trackingNo}")
-    public ResponseEntity<?> deleteShipmentInfoByTrackingNo(@PathVariable UUID trackingNo) {
-        return (deleteShipmentByTrackingNoCommand.execute(trackingNo) > 0) ?
-                ResponseEntity.ok("Shipment info for the shipment of tracking number " + trackingNo + " has been successfully deleted.") :
-                ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking number " + trackingNo + " not found");
+    public ResponseEntity<String> deleteShipmentInfoByTrackingNo(@PathVariable UUID trackingNo) {
+        Optional<String> deleteResult = deleteShipmentByTrackingNoCommand.execute(trackingNo);
+        return deleteResult
+                .map(result -> ResponseEntity.ok("Shipment for the shipment of tracking number " + trackingNo + " has been successfully deleted"))
+                .orElseGet(() -> ResponseEntity.status(HttpStatus.NOT_FOUND).body("Shipment with tracking number " + trackingNo + " not found"));
     }
 }

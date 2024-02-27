@@ -4,6 +4,7 @@ import com.azshiptest.azshipapp.infra.repositories.adapters.ShipmentRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -15,7 +16,9 @@ public class DeleteShipmentByTrackingNoCommand {
     }
 
     @Transactional
-    public int execute(UUID trackingNo) {
-        return shipmentRepository.deleteByTrackingNo(trackingNo);
+    public Optional<String> execute(UUID trackingNo) {
+        return shipmentRepository.deleteByTrackingNo(trackingNo) > 0 ?
+                Optional.of("Shipment successfully deleted.") :
+                Optional.empty();
     }
 }

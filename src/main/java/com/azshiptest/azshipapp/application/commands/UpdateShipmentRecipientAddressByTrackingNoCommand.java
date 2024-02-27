@@ -21,22 +21,25 @@ public class UpdateShipmentRecipientAddressByTrackingNoCommand {
     }
 
     @Transactional
-    public int execute(UUID trackingNo, ChangeAddressRequest newAddress) {
-        Optional<ShipmentEntity> optionalShipmentInfo = shipmentRepository.findByTrackingNo(trackingNo);
+    public Optional<String> execute(UUID trackingNo, ChangeAddressRequest newAddress) {
+        return shipmentRepository.findByTrackingNo(trackingNo)
+                .map(shipment -> {
+                    updateAddress(shipment.getRecipientAddress().getId(), newAddress);
+                    return Optional.of("Address updated successfully.");
+                })
+                .orElse(Optional.empty());
+    }
 
-        if (optionalShipmentInfo.isEmpty()) {
-            return 0;
-        }
-
-        ShipmentEntity shipmentEntity = optionalShipmentInfo.get();
-        UUID addressId = shipmentEntity.getRecipientAddress().getId();
-
-        addressRepository.updateAddressById(addressId, newAddress.streetName(),
-                newAddress.neighbourhood(), newAddress.city(),
-                newAddress.stateCodeEnum(), newAddress.addressNumber(),
-                newAddress.zipCode());
-
-        return 1;
+    private void updateAddress(UUID addressId, ChangeAddressRequest newAddress) {
+        addressRepository.updateAddressById(
+                addressId,
+                newAddress.streetName(),
+                newAddress.neighbourhood(),
+                newAddress.city(),
+                newAddress.stateCodeEnum(),
+                newAddress.addressNumber(),
+                newAddress.zipCode()
+        );
     }
 }
 
